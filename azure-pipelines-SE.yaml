@@ -156,10 +156,6 @@ stages:
           steps:
           - checkout: self
 
-          - task: CmdLine@2
-            inputs:
-              script: 'cd $(Pipeline.Workspace)/deployments && ls -lrt'
-
           - task: KubernetesManifest@1
             displayName: Deploy to Kubernetes
             inputs:
