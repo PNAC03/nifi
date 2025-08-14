@@ -57,7 +57,7 @@ spec:
             resources:
               requests:
                 storage: 5Gi
-            storageClassName: "local-path"
+            storageClassName: "default"
         - mountPath: /opt/nifi/flowfile_repository
           name: flowfile-repository
           reclaimPolicy: Delete
@@ -67,7 +67,7 @@ spec:
             resources:
               requests:
                 storage: 20Gi
-            storageClassName: "local-path"
+            storageClassName: "default"
         - mountPath: /opt/nifi/nifi-current/conf
           name: conf
           reclaimPolicy: Delete
@@ -77,7 +77,7 @@ spec:
             resources:
               requests:
                 storage: 5Gi
-            storageClassName: "local-path"
+            storageClassName: "default"
         - mountPath: /opt/nifi/content_repository
           name: content-repository
           reclaimPolicy: Delete
@@ -87,7 +87,7 @@ spec:
             resources:
               requests:
                 storage: 20Gi
-            storageClassName: "local-path"
+            storageClassName: "default"
         - mountPath: /opt/nifi/provenance_repository
           name: provenance-repository
           reclaimPolicy: Delete
