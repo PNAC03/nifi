@@ -106,6 +106,7 @@ spec:
             resources:
               requests:
                 storage: 1Gi
+            storageClassName: "zookeeper-azure-blob-storage-retain"
       resourcesRequirements:
         limits:
           cpu: "1"
