@@ -215,8 +215,12 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - ih-nifi-qa.3sc.ai
+      secretName: 3scs-tls
   rules:
-    - host: nifitesting.demo.org
+    - host: ih-nifi-qa.3sc.ai
       http:
         paths:
           - backend:
