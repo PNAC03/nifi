@@ -159,6 +159,17 @@ stages:
         deploy:
           steps:
           - checkout: self
+          
+          - task: Kubernetes@1
+            name: getPvc
+            displayName: "Get all ingress names and filter"
+            inputs:
+              connectionType: 'Kubernetes Service Connection'
+              kubernetesServiceEndpoint: $(kubernetesServer)
+              namespace: $(Environment)
+              command: 'get'
+              arguments: 'ingress ingress-resource -o=yaml'
+              outputFormat: yaml
 
           - task: KubernetesManifest@1
             displayName: Deploy to Kubernetes
