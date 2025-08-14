@@ -170,6 +170,15 @@ stages:
               command: 'get'
               arguments: 'ingress ingress-resource -o=yaml'
               outputFormat: yaml
+          
+          - task: KubernetesManifest@1
+            displayName: Delete existing ingress
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: delete
+              arguments: ingress ingress-resource
+            continueOnError: true
 
           - task: KubernetesManifest@1
             displayName: Deploy to Kubernetes
@@ -196,7 +205,7 @@ stages:
           - checkout: self
 
           - task: KubernetesManifest@1
-            displayName: Delete any existing Jobs
+            displayName: Delete existing NiFiCluster
             inputs:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
               namespace: $(Environment)
