@@ -1,0 +1,138 @@
+apiVersion: nifi.konpyutaika.com/v1
+kind: NifiCluster
+metadata:
+  name: simplenifi
+  namespace: nifi
+spec:
+  service:
+    headlessEnabled: true
+    labels:
+      cluster-name: simplenifi
+  clusterManager: zookeeper
+  zkAddress: "zookeeper.zookeeper:2181"
+  zkPath: /simplenifi
+  externalServices:
+    - metadata:
+        labels:
+          cluster-name: driver-simplenifi
+      name: driver-ip
+      spec:
+        portConfigs:
+          - internalListenerName: http
+            port: 8080
+        type: ClusterIP
+  clusterImage: "apache/nifi:2.4.0"
+  initContainerImage: "bash:5.2.2"
+  oneNifiNodePerNode: true
+  readOnlyConfig:
+    nifiProperties:
+      webProxyHosts:
+        - cluster-access
+      overrideConfigs: |
+        nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
+        nifi.web.http.host=0.0.0.0
+        nifi.web.http.port=8080
+  pod:
+    labels:
+      cluster-name: simplenifi
+  nodeConfigGroups:
+    default_group:
+      imagePullPolicy: IfNotPresent
+      isNode: true
+      serviceAccountName: "default"
+      storageConfigs:
+        - mountPath: /opt/nifi/data
+          name: data
+          reclaimPolicy: Delete
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+            storageClassName: "local-path"
+        - mountPath: /opt/nifi/flowfile_repository
+          name: flowfile-repository
+          reclaimPolicy: Delete
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi
+            storageClassName: "local-path"
+        - mountPath: /opt/nifi/nifi-current/conf
+          name: conf
+          reclaimPolicy: Delete
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+            storageClassName: "local-path"
+        - mountPath: /opt/nifi/content_repository
+          name: content-repository
+          reclaimPolicy: Delete
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 20Gi
+            storageClassName: "local-path"
+        - mountPath: /opt/nifi/provenance_repository
+          name: provenance-repository
+          reclaimPolicy: Delete
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 3Gi
+        - mountPath: /var/ih_scripts
+          name: ih-scripts
+          reclaimPolicy: Delete
+          pvcSpec:
+            accessModes:
+              - ReadWriteMany
+            resources:
+              requests:
+                storage: 1Gi
+      resourcesRequirements:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+  nodes:
+    - id: 1
+      nodeConfigGroup: "default_group"
+  propagateLabels: true
+  nifiClusterTaskSpec:
+    retryDurationMinutes: 10
+  listenersConfig:
+    internalListeners:
+      - containerPort: 8080
+        type: http
+        name: http
+      - containerPort: 6007
+        type: cluster
+        name: cluster
+      - containerPort: 10000
+        type: s2s
+        name: s2s
+      - containerPort: 9090
+        type: prometheus
+        name: prometheus
+      - containerPort: 6342
+        type: load-balance
+        name: load-balance
+  externalServices:
+  - name: cluster-access
+    spec:
+      portConfigs:
+        - internalListenerName: http
+          port: 8080
+      type: LoadBalancer

@@ -1,0 +1,160 @@
+parameters:
+  - name: Cluster
+    displayName: Cluster
+    type: string
+    default: SCAI-CIN-AKS-DQU
+    values:
+      - SCAI-CIN-AKS-DQU
+
+  - name: freshInstallation
+    displayName: Is it for a Fresh Installation?
+    type: boolean
+    default: false
+    values:
+      - true
+      - false
+
+  - name: namespace
+    displayName: Which environment?
+    type: string
+    default: dev
+    values:
+      - dev
+  
+  - name: installCertManager
+    displayName: Install CertManager
+    type: boolean
+    default: true
+  - name: installNiFiKop
+    displayName: Install NiFiKop
+    type: boolean
+    default: true
+  - name: installZookeeper
+    displayName: Install Zookeeper
+    type: boolean
+    default: true
+
+
+variables:
+  - name: Environment
+    ${{ if eq( parameters.Cluster, 'SCAI-CIN-AKS-DQU') }}:
+      value: dev
+  - name: vmImageName
+    value: ubuntu-latest
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+- stage: certmanager
+  displayName: Deploy CertManager 
+  condition: ${{ eq(parameters.installCertManager, 'true') }}
+  jobs:
+  - job: deployCertManager
+    timeoutInMinutes: 6          # cancel pipeline in case of any misconfig 
+    displayName: 'Installing Helm and CertManager'
+    steps:
+      - task: Kubernetes@1
+        displayName: Create CRDs
+        condition: ${{ eq(parameters.freshInstallation, 'true') }} #eq(parameters.Cluster, true)
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceEndpoint: '${{parameters.Cluster}}'
+          command: 'apply'
+          arguments: '-f https://github.com/jetstack/cert-manager/releases/download/v1.17.2/cert-manager.crds.yaml'
+          forceUpdate: false
+  
+      - task: HelmInstaller@1
+        inputs:
+          helmVersionToInstall: 'latest'
+      
+      - script: |
+          helm repo add jetstack https://charts.jetstack.io 
+          helm repo update  
+    
+      - task: HelmDeploy@1
+        displayName: helm installation.
+        condition: succeeded()
+        inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceConnection: '${{parameters.Cluster}}'
+          namespace: '$(Environment)'
+          command: 'install'
+          chartType: 'Name'
+          chartName: 'jetstack/cert-manager'
+          releaseName: 'cert-manager'
+          arguments: '--version v1.17.2'
+
+- stage: nifikop
+  displayName: Deploy NiFiKop
+  condition: ${{ eq(parameters.installNiFiKop, 'true') }}
+  jobs:
+  - job: installingNiFiKop
+    displayName: 'Intalling NiFiKop'
+    timeoutInMinutes: 2          # cancel pipeline in case of any misconfig 
+    steps:
+      - task: HelmInstaller@1
+        inputs:
+          helmVersionToInstall: 'latest'
+
+      - task: HelmDeploy@0
+        displayName: 'Install NifiKop'
+        inputs:
+          command: 'install'
+          chartType: 'Name'
+          chartName: 'oci://ghcr.io/konpyutaika/helm-charts/nifikop'
+          releaseName: 'nifikop'
+          namespace: '$(Environment)'
+          arguments: '--version 1.14.2 --set image.tag=v1.14.2-release --set resources.requests.memory=256Mi --set resources.requests.cpu=250m --set resources.limits.memory=256Mi --set resources.limits.cpu=250m --set namespaces={$(Environment)}'
+
+- stage: zookeeper 
+  displayName: Deploy Zookeeper
+  condition: ${{ eq(parameters.installZookeeper, 'true') }}
+  jobs:
+  - job: installZookeeper
+    displayName: 'Installing Helm and Zookeeper'
+    timeoutInMinutes: 6          
+    steps:
+      - task: HelmInstaller@1
+        inputs:
+          helmVersionToInstall: 'latest'
+      
+      - script: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami 
+          helm repo update  
+
+      - task: HelmDeploy@1
+        displayName: 'Install Zookeeper'
+        inputs:
+          command: 'install'
+          releaseName: 'zookeeper'
+          namespace: '$(Environment)'
+          chartType: 'Name'
+          chartName: 'bitnami/zookeeper'
+          arguments: '--set replicaCount=1 --set auth.enabled=false --set service.type=ClusterIP --set service.headless.clusterIP=None --set persistence.enabled=true --set persistence.size=5Gi --set volumePermissions.enabled=true'
+
+- stage: DeployCluster
+  displayName: DeployCluster
+  condition: 
+  jobs:
+  - deployment:
+    displayName: Deploy to AKS 
+    pool:
+      vmImage: $(vmImageName)
+    environment: $(Environment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: CmdLine@2
+            inputs:
+              script: 'cd $(Pipeline.Workspace)/deployments && ls -lrt'
+
+          - task: KubernetesManifest@1
+            displayName: Deploy to Kubernetes
+            inputs:
+              kubernetesServiceConnection: $(kubernetesServer)
+              namespace: $(Environment)
+              action: deploy
+              manifests: |
+                $(Pipeline.Workspace)/deployments/nificluster.yaml
