@@ -24,15 +24,15 @@ parameters:
   - name: installCertManager
     displayName: Install CertManager
     type: boolean
-    default: true
+    default: false
   - name: installNiFiKop
     displayName: Install NiFiKop
     type: boolean
-    default: true
+    default: false
   - name: installZookeeper
     displayName: Install Zookeeper
     type: boolean
-    default: true
+    default: false
   - name: createCluster
     displayName: Create NiFiCluster
     type: boolean
@@ -159,26 +159,6 @@ stages:
         deploy:
           steps:
           - checkout: self
-          
-          - task: Kubernetes@1
-            name: getPvc
-            displayName: "Get all ingress names and filter"
-            inputs:
-              connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: '${{parameters.Cluster}}'
-              namespace: $(Environment)
-              command: 'get'
-              arguments: 'ingress ingress-resource -o=yaml'
-              outputFormat: yaml
-          
-          - task: KubernetesManifest@1
-            displayName: Delete existing ingress
-            inputs:
-              kubernetesServiceConnection: '${{parameters.Cluster}}'
-              namespace: $(Environment)
-              action: delete
-              arguments: ingress ingress-resource
-            continueOnError: true
 
           - task: KubernetesManifest@1
             displayName: Deploy to Kubernetes
