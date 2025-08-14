@@ -97,9 +97,11 @@ stages:
         inputs:
           helmVersionToInstall: 'latest'
 
-      - task: HelmDeploy@0
+      - task: HelmDeploy@1
         displayName: 'Install NifiKop'
         inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceConnection: '${{parameters.Cluster}}'
           command: 'install'
           chartType: 'Name'
           chartName: 'oci://ghcr.io/konpyutaika/helm-charts/nifikop'
@@ -126,6 +128,8 @@ stages:
       - task: HelmDeploy@1
         displayName: 'Install Zookeeper'
         inputs:
+          connectionType: 'Kubernetes Service Connection'
+          kubernetesServiceConnection: '${{parameters.Cluster}}'
           command: 'install'
           releaseName: 'zookeeper'
           namespace: '$(Environment)'
