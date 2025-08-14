@@ -147,8 +147,8 @@ spec:
         nifi.nar.library.autoload.directory=../extensions
         nifi.sensitive.props.key=nifikopnifikopnifikop
       webProxyHosts:
-        - ih-nifi-qa:443
-        - in-nifi-qa
+        - ih-nifi-qa.3sc.ai:443
+        - in-nifi-qa.3sc.ai
   service:
     headlessEnabled: true
   sidecarConfigs:
@@ -255,7 +255,6 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: nifikop-cluster
-    
 roleRef:
   kind: Role
   name: nifikop-cluster
