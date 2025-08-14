@@ -131,7 +131,7 @@ stages:
           connectionType: 'Kubernetes Service Connection'
           kubernetesServiceConnection: '${{parameters.Cluster}}'
           command: 'install'
-          releaseName: 'zookeeper'
+          releaseName: 'nifizkp-zookeeper'
           namespace: '$(Environment)'
           chartType: 'Name'
           chartName: 'bitnami/zookeeper'
@@ -161,4 +161,4 @@ stages:
               namespace: $(Environment)
               action: deploy
               manifests: |
-                $(Pipeline.Workspace)/deployments/nificluster.yaml
+                $(Pipeline.Workspace)/deployments/nificluster-$(Environment).yaml

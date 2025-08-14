@@ -2,14 +2,13 @@ apiVersion: nifi.konpyutaika.com/v1
 kind: NifiCluster
 metadata:
   name: simplenifi
-  namespace: nifi
 spec:
   service:
     headlessEnabled: true
     labels:
       cluster-name: simplenifi
   clusterManager: zookeeper
-  zkAddress: "zookeeper.zookeeper:2181"
+  zkAddress: "nifizkp-zookeeper.dev:2181"
   zkPath: /simplenifi
   externalServices:
     - metadata:
@@ -35,6 +34,8 @@ spec:
   pod:
     labels:
       cluster-name: simplenifi
+    nodeSelector:
+      node-type: dev
   nodeConfigGroups:
     default_group:
       imagePullPolicy: IfNotPresent
