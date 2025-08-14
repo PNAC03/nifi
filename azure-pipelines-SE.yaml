@@ -37,6 +37,10 @@ parameters:
     displayName: Create NiFiCluster
     type: boolean
     default: true
+  - name: deleteCluster
+    displayName: Create deleteCluster
+    type: boolean
+    default: true
 
 
 variables:
@@ -164,3 +168,27 @@ stages:
               action: deploy
               manifests: |
                 $(Build.SourcesDirectory)/deployments/nificluster-dev.yaml
+
+- stage: deletenificluster
+  displayName: Delete NiFiCluster
+  condition: ${{ eq(parameters.deleteCluster, 'true') }}
+  jobs:
+  - deployment:
+    displayName: Deleting NiFiCluster 
+    pool:
+      vmImage: $(vmImageName)
+    environment: $(Environment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+
+          - task: KubernetesManifest@1
+            displayName: Delete any existing Jobs
+            inputs:
+              kubernetesServiceConnection: $(kubernetesServer)
+              namespace: $(namespace)
+              action: delete
+              arguments: -f $(Build.SourcesDirectory)/deployments/nificluster-dev.yaml
+            continueOnError: true
