@@ -204,7 +204,7 @@ spec:
         - mountPath: /var/log
           name: logs
   clusterManager: kubernetes
-
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
