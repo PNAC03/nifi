@@ -137,12 +137,11 @@ stages:
           chartName: 'bitnami/zookeeper'
           arguments: '--set replicaCount=1 --set auth.enabled=false --set service.type=ClusterIP --set service.headless.clusterIP=None --set persistence.enabled=true --set persistence.size=5Gi --set volumePermissions.enabled=true'
 
-- stage: DeployCluster
-  displayName: DeployCluster
-  condition: 
+- stage: nificluster
+  displayName: Deploying NiFiCluster
   jobs:
   - deployment:
-    displayName: Deploy to AKS 
+    displayName: Deploying NiFiCluster 
     pool:
       vmImage: $(vmImageName)
     environment: $(Environment)
