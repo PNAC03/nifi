@@ -40,7 +40,8 @@ spec:
   pod:
     labels:
       cluster-name: simplenifi
-    nodeSelector:
+  nodeLabelsSelector:
+    matchLabels:
       node-type: dev
   nodeConfigGroups:
     default_group:
