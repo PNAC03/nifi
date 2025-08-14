@@ -188,7 +188,7 @@ stages:
             displayName: Delete any existing Jobs
             inputs:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
-              namespace: $(namespace)
+              namespace: $(Environment)
               action: delete
               arguments: -f $(Build.SourcesDirectory)/deployments/nificluster-dev.yaml
             continueOnError: true
