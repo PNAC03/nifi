@@ -32,7 +32,7 @@ spec:
   readOnlyConfig:
     nifiProperties:
       webProxyHosts:
-        - cluster-access
+        - 4.187.160.84:8080
       overrideConfigs: |
         nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
         nifi.web.http.host=0.0.0.0
