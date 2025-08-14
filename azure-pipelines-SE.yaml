@@ -33,6 +33,10 @@ parameters:
     displayName: Install Zookeeper
     type: boolean
     default: true
+  - name: createCluster
+    displayName: Create NiFiCluster
+    type: boolean
+    default: true
 
 
 variables:
@@ -139,6 +143,7 @@ stages:
 
 - stage: nificluster
   displayName: Deploying NiFiCluster
+  condition: ${{ eq(parameters.createCluster, 'true') }}
   jobs:
   - deployment:
     displayName: Deploying NiFiCluster 
