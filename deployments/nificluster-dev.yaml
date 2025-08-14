@@ -1,56 +1,79 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: nifi-single-user-credentials
+type: Opaque
+stringData:
+  username: nifi3scdev
+  password: nifi3scdevsetupisready
+---
 apiVersion: nifi.konpyutaika.com/v1
 kind: NifiCluster
 metadata:
-  name: simplenifi
+  name: nifikop  
 spec:
-  service:
-    headlessEnabled: true
-    labels:
-      cluster-name: simplenifi
-  clusterManager: zookeeper
-  zkAddress: "nifizkp-zookeeper.dev:2181"
-  zkPath: /simplenifi
-  externalServices:
-    - metadata:
-        labels:
-          cluster-name: driver-simplenifi
-      name: driver-ip
-      spec:
-        portConfigs:
-          - internalListenerName: http
-            port: 8080
-        type: ClusterIP
-    - name: cluster-access
-      spec:
-        portConfigs:
-          - internalListenerName: http
-            port: 8080
-        type: ClusterIP
-  clusterImage: "apache/nifi:2.4.0"
-  initContainerImage: "bash:5.2.2"
+  clusterImage: apache/nifi:2.4.0
+  nodeUserIdentityTemplate: node-%d-nifikop
   oneNifiNodePerNode: true
-  readOnlyConfig:
-    nifiProperties:
-      webProxyHosts:
-        - 4.187.160.84:8080
-      overrideConfigs: |
-        nifi.sensitive.props.key=thisIsABadSensitiveKeyPassword
-        nifi.web.http.host=0.0.0.0
-        nifi.web.http.port=8080
-  pod:
-    labels:
-      cluster-name: simplenifi
+  singleUserConfiguration:
+    enabled: true
+    authorizerEnabled: true
+    secretRef:
+      name: "nifi-single-user-credentials"
+    secretKeys:
+      username: "username"
+      password: "password"
+  externalServices:
+    - name: nifikop
+      spec:
+        portConfigs:
+          - internalListenerName: https
+            port: 443
+          - internalListenerName: s2s
+            port: 10000
+        type: LoadBalancer
+  listenersConfig:
+    internalListeners:
+      - containerPort: 8443
+        name: https
+        type: https
+      - containerPort: 6007
+        name: cluster
+        type: cluster
+      - containerPort: 10000
+        name: s2s
+        type: s2s
+    sslSecrets:
+      create: true
+      tlsSecretName: nifikop-tls
+  nifiClusterTaskSpec:
+    retryDurationMinutes: 10
   nodeConfigGroups:
     default_group:
-      imagePullPolicy: IfNotPresent
+      fsGroup: 1337
+      isNode: true
       nodeSelector:
         node-type: dev
-      isNode: true
-      serviceAccountName: "default"
+      resourcesRequirements:
+        limits:
+          cpu: "2.5"
+          memory: 3Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+      serviceAccountName: nifikop-cluster
       storageConfigs:
+        - mountPath: /opt/nifi/nifi-current/logs
+          name: logs
+          pvcSpec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 5Gi
+            storageClassName: "default"
         - mountPath: /opt/nifi/data
           name: data
-          reclaimPolicy: Delete
           pvcSpec:
             accessModes:
               - ReadWriteOnce
@@ -60,7 +83,6 @@ spec:
             storageClassName: "default"
         - mountPath: /opt/nifi/flowfile_repository
           name: flowfile-repository
-          reclaimPolicy: Delete
           pvcSpec:
             accessModes:
               - ReadWriteOnce
@@ -70,7 +92,6 @@ spec:
             storageClassName: "default"
         - mountPath: /opt/nifi/nifi-current/conf
           name: conf
-          reclaimPolicy: Delete
           pvcSpec:
             accessModes:
               - ReadWriteOnce
@@ -79,8 +100,7 @@ spec:
                 storage: 5Gi
             storageClassName: "default"
         - mountPath: /opt/nifi/content_repository
-          name: content-repository
-          reclaimPolicy: Delete
+          name: content-repository-default
           pvcSpec:
             accessModes:
               - ReadWriteOnce
@@ -89,14 +109,14 @@ spec:
                 storage: 20Gi
             storageClassName: "default"
         - mountPath: /opt/nifi/provenance_repository
-          name: provenance-repository
-          reclaimPolicy: Delete
+          name: provenance-repository-default
           pvcSpec:
             accessModes:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 3Gi
+                storage: 5Gi
+            storageClassName: "default"
         - mountPath: /var/ih_scripts
           name: ih-scripts
           reclaimPolicy: Delete
@@ -107,33 +127,132 @@ spec:
               requests:
                 storage: 1Gi
             storageClassName: "zookeeper-azure-blob-storage-retain"
-      resourcesRequirements:
-        limits:
-          cpu: "2"
-          memory: 3Gi
-        requests:
-          cpu: "1"
-          memory: 2Gi
   nodes:
-    - id: 1
-      nodeConfigGroup: "default_group"
-  propagateLabels: true
-  nifiClusterTaskSpec:
-    retryDurationMinutes: 10
-  listenersConfig:
-    internalListeners:
-      - containerPort: 8080
-        type: http
-        name: http
-      - containerPort: 6007
-        type: cluster
-        name: cluster
-      - containerPort: 10000
-        type: s2s
-        name: s2s
-      - containerPort: 9090
-        type: prometheus
-        name: prometheus
-      - containerPort: 6342
-        type: load-balance
-        name: load-balance
+    - id: 0
+      labels:
+        nifi_cr: nifikop
+        nifi_node_group: default_group
+      nodeConfigGroup: default_group
+  propagateLabels: false
+  readOnlyConfig:
+    bootstrapProperties:
+      # nifiJvmMemory: 2g
+      overrideConfigs: |
+        # Java 8 Tuning see https://community.hortonworks.com/articles/7882/hdfnifi-best-practices-for-setting-up-a-high-perfo.html for references
+        java.arg.7=-XX:ReservedCodeCacheSize=256m
+        java.arg.8=-XX:+UseCodeCacheFlushing
+    maximumTimerDrivenThreadCount: 40
+    nifiProperties:
+      overrideConfigs: |
+        nifi.nar.library.autoload.directory=../extensions
+        nifi.sensitive.props.key=nifikopnifikopnifikop
+      webProxyHosts:
+        - ih-nifi-qa:443
+        - in-nifi-qa
+  service:
+    headlessEnabled: true
+  sidecarConfigs:
+    - args:
+        - tail
+        - -n+1
+        - -F
+        - /var/log/nifi-app.log
+      image: busybox:1.36
+      name: app-log
+      resources:
+        limits:
+          cpu: 50m
+          memory: 50Mi
+        requests:
+          cpu: 50m
+          memory: 50Mi
+      volumeMounts:
+        - mountPath: /var/log
+          name: logs
+    - args:
+        - tail
+        - -n+1
+        - -F
+        - /var/log/nifi-bootstrap.log
+      image: busybox:1.36
+      name: bootstrap-log
+      resources:
+        limits:
+          cpu: 50m
+          memory: 50Mi
+        requests:
+          cpu: 50m
+          memory: 50Mi
+      volumeMounts:
+        - mountPath: /var/log
+          name: logs
+    - args:
+        - tail
+        - -n+1
+        - -F
+        - /var/log/nifi-user.log
+      image: busybox:1.36
+      name: user-log
+      resources:
+        limits:
+          cpu: 50m
+          memory: 50Mi
+        requests:
+          cpu: 50m
+          memory: 50Mi
+      volumeMounts:
+        - mountPath: /var/log
+          name: logs
+  clusterManager: kubernetes
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nifikop
+  annotations:
+    nginx.org/ssl-services: nifikop
+    nginx.org/lb-method: ip_hash
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: nifitesting.demo.org
+      http:
+        paths:
+          - backend:
+              service:
+                name: nifikop
+                port:
+                  number: 443
+            path: /
+            pathType: Prefix
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nifikop-cluster
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nifikop-cluster  
+rules:
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nifikop-cluster
+subjects:
+  - kind: ServiceAccount
+    name: nifikop-cluster
+    
+roleRef:
+  kind: Role
+  name: nifikop-cluster
+  apiGroup: rbac.authorization.k8s.io

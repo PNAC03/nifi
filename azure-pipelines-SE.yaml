@@ -38,9 +38,9 @@ parameters:
     type: boolean
     default: true
   - name: deleteCluster
-    displayName: Create deleteCluster
+    displayName: Delete NiFiCluster
     type: boolean
-    default: true
+    default: false
 
 
 variables:
