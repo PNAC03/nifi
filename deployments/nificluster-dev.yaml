@@ -205,6 +205,32 @@ spec:
           name: logs
   clusterManager: kubernetes
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nifikop
+  annotations:
+    nginx.org/ssl-services: nifikop
+    nginx.org/lb-method: ip_hash
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ih-nifi-qa.3sc.ai
+      secretName: 3scs-tls
+  rules:
+    - host: ih-nifi-qa.3sc.ai
+      http:
+        paths:
+          - backend:
+              service:
+                name: nifikop
+                port:
+                  number: 443
+            path: /
+            pathType: Prefix
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
