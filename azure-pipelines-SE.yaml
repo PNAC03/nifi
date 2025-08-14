@@ -165,7 +165,7 @@ stages:
             displayName: "Get all ingress names and filter"
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: $(kubernetesServer)
+              kubernetesServiceEndpoint: '${{parameters.Cluster}}'
               namespace: $(Environment)
               command: 'get'
               arguments: 'ingress ingress-resource -o=yaml'
