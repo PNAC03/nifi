@@ -154,6 +154,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - checkout: self
+
           - task: CmdLine@2
             inputs:
               script: 'cd $(Pipeline.Workspace)/deployments && ls -lrt'
@@ -165,4 +167,4 @@ stages:
               namespace: $(Environment)
               action: deploy
               manifests: |
-                $(Pipeline.Workspace)/deployments/nificluster-$(Environment).yaml
+                $(Build.SourcesDirectory)/deployments/nificluster-dev.yaml
