@@ -1,12 +1,3 @@
-kind: Secret
-apiVersion: v1
-metadata:
-  name: nifi-single-user-credentials
-type: Opaque
-stringData:
-  username: nifi3scdev
-  password: nifi3scdevsetupisready
----
 apiVersion: nifi.konpyutaika.com/v1
 kind: NifiCluster
 metadata:
