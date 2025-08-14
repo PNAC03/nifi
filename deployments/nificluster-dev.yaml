@@ -20,6 +20,12 @@ spec:
           - internalListenerName: http
             port: 8080
         type: ClusterIP
+    - name: cluster-access
+      spec:
+        portConfigs:
+          - internalListenerName: http
+            port: 8080
+        type: LoadBalancer
   clusterImage: "apache/nifi:2.4.0"
   initContainerImage: "bash:5.2.2"
   oneNifiNodePerNode: true
@@ -130,10 +136,3 @@ spec:
       - containerPort: 6342
         type: load-balance
         name: load-balance
-  externalServices:
-  - name: cluster-access
-    spec:
-      portConfigs:
-        - internalListenerName: http
-          port: 8080
-      type: LoadBalancer
