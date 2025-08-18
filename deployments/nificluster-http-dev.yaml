@@ -7,7 +7,7 @@ spec:
     headlessEnabled: true
     labels:
       cluster-name: simplenifi
-  clusterManager: zookeeper
+  clusterManager: kubernetes
   zkAddress: "nifizkp-zookeeper.dev:2181"
   zkPath: /simplenifi
   externalServices:

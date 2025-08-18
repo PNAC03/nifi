@@ -137,6 +137,7 @@ spec:
       overrideConfigs: |
         nifi.nar.library.autoload.directory=../extensions
         nifi.sensitive.props.key=nifikopnifikopnifikop
+        nifi.variable.registry.properties=/opt/nifi/nifi-current/conf/variable-registry.properties
       webProxyHosts:
         - ih-nifi-qa.3sc.ai:443
         - in-nifi-qa.3sc.ai
