@@ -45,6 +45,11 @@ spec:
       isNode: true
       nodeSelector:
         node-type: dev
+      externalVolumeConfigs:
+        - name: secret-volumeMounts
+          mountPath: "/opt/nifi/secrets/"
+          secret:
+            secretName: "nifi-dataflow-secrets"
       resourcesRequirements:
         limits:
           cpu: "2.5"
@@ -126,6 +131,39 @@ spec:
       nodeConfigGroup: default_group
   propagateLabels: false
   readOnlyConfig:
+    additionalNifiEnvs:
+      - name: modenik_tid
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: modenik_tid
+      - name: dixcy_email_id
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: dixcy_email_id
+      - name: enamor_email_id
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: enamor_email_id
+      - name: login_recaptcha_token
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: login_recaptcha_token
+      - name: dixcy_buid
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: dixcy_buid
+      - name: enamor_buid
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: enamor_buid
+      - name: dixcy_password
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: dixcy_password
+      - name: enamor_password
+        valueFrom:
+          name: nifi-dataflow-secrets
+          key: enamor_password  
     bootstrapProperties:
       # nifiJvmMemory: 2g
       overrideConfigs: |
