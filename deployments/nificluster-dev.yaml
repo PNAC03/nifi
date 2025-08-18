@@ -46,7 +46,7 @@ spec:
       nodeSelector:
         node-type: dev
       externalVolumeConfigs:
-        - name: secret-volumeMounts
+        - name: dataflow-secrets-volume
           mountPath: "/opt/nifi/secrets/"
           secret:
             secretName: "nifi-dataflow-secrets"
