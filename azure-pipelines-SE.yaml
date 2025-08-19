@@ -46,9 +46,9 @@ parameters:
 
 variables:
   - name: Environment
-    ${{ if eq( parameters.Environment, 'dev') }}:
+    ${{ if eq( parameters.namespace, 'dev') }}:
       value: dev
-    ${{ elseif eq( parameters.Environment, 'qa') }}:
+    ${{ elseif eq( parameters.namespace, 'qa') }}:
       value: qa
   - name: vmImageName
     value: ubuntu-latest
