@@ -22,7 +22,7 @@ spec:
             port: 443
           - internalListenerName: s2s
             port: 10000
-        type: LoadBalancer
+        type: ClusterIP
   listenersConfig:
     internalListeners:
       - containerPort: 8443
