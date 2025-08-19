@@ -20,6 +20,7 @@ parameters:
     default: dev
     values:
       - dev
+      - qa 
   
   - name: installCertManager
     displayName: Install CertManager
@@ -45,8 +46,10 @@ parameters:
 
 variables:
   - name: Environment
-    ${{ if eq( parameters.Cluster, 'SCAI-CIN-AKS-DQU') }}:
+    ${{ if eq( parameters.Environment, 'dev') }}:
       value: dev
+    ${{ elseif eq( parameters.Environment, 'qa') }}:
+      value: qa
   - name: vmImageName
     value: ubuntu-latest
 
@@ -167,7 +170,7 @@ stages:
               namespace: $(Environment)
               action: deploy
               manifests: |
-                $(Build.SourcesDirectory)/deployments/nificluster-dev.yaml
+                $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
 
 - stage: deletenificluster
   displayName: Delete NiFiCluster
@@ -190,5 +193,5 @@ stages:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
               namespace: $(Environment)
               action: delete
-              arguments: -f $(Build.SourcesDirectory)/deployments/nificluster-dev.yaml
+              arguments: -f $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
             continueOnError: true
