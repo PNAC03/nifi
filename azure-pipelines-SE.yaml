@@ -2,10 +2,10 @@ parameters:
   - name: Cluster
     displayName: Cluster
     type: string
-    default: SCAI-CIN-AKS-DQU
+    default: SCAI-CIN-AKS-DQUS
     values:
-      - SCAI-CIN-AKS-DQU
-
+      - SCAI-CIN-AKS-DQUS
+      
   - name: freshInstallation
     displayName: Is it for a Fresh Installation?
     type: boolean
