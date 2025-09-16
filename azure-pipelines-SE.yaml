@@ -76,10 +76,10 @@ stages:
           command: 'apply'
           arguments: '-f https://github.com/jetstack/cert-manager/releases/download/v1.17.2/cert-manager.crds.yaml'
           forceUpdate: false
-      - script: |
+
       # - task: HelmInstaller@1
       #   inputs:
-      #     helmVersionToInstall: 'latest'
+          # helmVersionToInstall: 'latest'
       
       - script: |
           sudo apt-get install curl gpg apt-transport-https --yes
@@ -91,7 +91,7 @@ stages:
           helm repo update  
     
       - task: HelmDeploy@1
-        displayName: helm installation.
+        displayName: cert-manager installation.
         condition: succeeded()
         inputs:
           connectionType: 'Kubernetes Service Connection'
@@ -111,10 +111,17 @@ stages:
     displayName: 'Intalling NiFiKop'
     timeoutInMinutes: 2          # cancel pipeline in case of any misconfig 
     steps:
-      - task: HelmInstaller@1
-        inputs:
-          helmVersionToInstall: 'latest'
+      # - task: HelmInstaller@1
+      #   inputs:
+      #     helmVersionToInstall: 'latest'
 
+      - script: |
+          sudo apt-get install curl gpg apt-transport-https --yes
+          curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+          sudo apt-get update
+          sudo apt-get install helm -y
+      
       - task: HelmDeploy@1
         displayName: 'Install NifiKop'
         inputs:
