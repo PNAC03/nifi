@@ -54,7 +54,9 @@ variables:
     value: ubuntu-latest
 
 pool:
-  vmImage: $(vmImageName)
+    name: '3SC' 
+    demands:
+        - Agent.ComputerName -equals SCAI-CIN-VMADA-DQUS
 
 stages:
 - stage: certmanager
