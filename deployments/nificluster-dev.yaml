@@ -118,11 +118,11 @@ spec:
           reclaimPolicy: Delete
           pvcSpec:
             accessModes:
-              - ReadWriteMany
+              - ReadWriteOnce
             resources:
               requests:
                 storage: 1Gi
-            storageClassName: "zookeeper-azure-blob-storage-retain"
+            storageClassName: "default"
   nodes:
     - id: 0
       labels:
