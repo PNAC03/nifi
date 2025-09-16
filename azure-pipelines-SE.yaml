@@ -168,8 +168,8 @@ stages:
   jobs:
   - deployment:
     displayName: Deploying NiFiCluster 
-    pool:
-      vmImage: $(vmImageName)
+    # pool:
+    #   vmImage: $(vmImageName)
     environment: $(Environment)
     strategy:
       runOnce:
