@@ -53,8 +53,8 @@ variables:
   - name: vmImageName
     value: ubuntu-latest
   - name: dockerRegistryServiceConnection
-    ${{ if and(eq( parameters.Cluster, 'SCAI-CIN-AKS-DQU'), eq( parameters.namespace, 'uat')) }}:
-      value: c1c632d7-148b-41c8-942d-3e71b69260f4
+    # ${{ if and(eq( parameters.Cluster, 'SCAI-CIN-AKS-DQU'), eq( parameters.namespace, 'dev')) }}:
+    value: c1c632d7-148b-41c8-942d-3e71b69260f4
   - name: imageRepository
     value: 'ih-nifi'
   - name: containerRegistry
