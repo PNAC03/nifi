@@ -18,9 +18,9 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: tls-certs
-              mountPath: /etc/nginx/certs
-              readOnly: true
+            # - name: tls-certs
+            #   mountPath: /etc/nginx/certs
+            #   readOnly: true
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d
       volumes:
