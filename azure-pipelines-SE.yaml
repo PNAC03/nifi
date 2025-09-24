@@ -52,6 +52,19 @@ variables:
       value: qa
   - name: vmImageName
     value: ubuntu-latest
+  - name: dockerRegistryServiceConnection
+    ${{ if and(eq( parameters.Cluster, 'SCAI-CIN-AKS-DQU'), eq( parameters.namespace, 'uat')) }}:
+      value: c1c632d7-148b-41c8-942d-3e71b69260f4
+  - name: imageRepository
+    value: 'ih-nifi'
+  - name: containerRegistry
+    value: 'scaicinacrall.azurecr.io'
+  - name: dockerfilePath
+    value: '$(Build.SourcesDirectory)/Dockerfile'
+  - name: imagePullSecret
+    value: docker-registry-creds
+  - name: tag
+    value: '$(Build.BuildId)'
 
 pool:
     name: '3SC' 
