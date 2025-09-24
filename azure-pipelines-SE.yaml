@@ -189,8 +189,6 @@ stages:
         deploy:
           steps:
           - checkout: self
-          
-          - checkout: self
 
           - task: KubernetesManifest@1
             displayName: Create imagePullSecret
