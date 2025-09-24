@@ -252,8 +252,6 @@ stages:
   jobs:
   - deployment:
     displayName: Deleting NiFiCluster 
-    pool:
-      vmImage: $(vmImageName)
     environment: $(Environment)
     strategy:
       runOnce:
