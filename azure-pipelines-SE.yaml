@@ -192,7 +192,7 @@ stages:
           
           - checkout: self
 
-          - task: KubernetesManifest@0
+          - task: KubernetesManifest@1
             displayName: Create imagePullSecret
             inputs:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
