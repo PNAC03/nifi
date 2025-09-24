@@ -135,32 +135,32 @@ stages:
           arguments: '--version 1.14.2 --set image.tag=v1.14.2-release --set resources.requests.memory=256Mi --set resources.requests.cpu=250m --set resources.limits.memory=256Mi --set resources.limits.cpu=250m --set namespaces={$(Environment)}'
 
 # - stage: zookeeper 
-  displayName: Deploy Zookeeper
-  condition: ${{ eq(parameters.installZookeeper, 'true') }}
-  jobs:
-  - job: installZookeeper
-    displayName: 'Installing Helm and Zookeeper'
-    timeoutInMinutes: 6          
-    steps:
-      - task: HelmInstaller@1
-        inputs:
-          helmVersionToInstall: 'latest'
+  # displayName: Deploy Zookeeper
+  # condition: ${{ eq(parameters.installZookeeper, 'true') }}
+  # jobs:
+  # - job: installZookeeper
+  #   displayName: 'Installing Helm and Zookeeper'
+  #   timeoutInMinutes: 6          
+  #   steps:
+  #     - task: HelmInstaller@1
+  #       inputs:
+  #         helmVersionToInstall: 'latest'
       
-      - script: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami 
-          helm repo update  
+  #     - script: |
+  #         helm repo add bitnami https://charts.bitnami.com/bitnami 
+  #         helm repo update  
 
-      - task: HelmDeploy@1
-        displayName: 'Install Zookeeper'
-        inputs:
-          connectionType: 'Kubernetes Service Connection'
-          kubernetesServiceConnection: '${{parameters.Cluster}}'
-          command: 'install'
-          releaseName: 'nifizkp-zookeeper'
-          namespace: '$(Environment)'
-          chartType: 'Name'
-          chartName: 'bitnami/zookeeper'
-          arguments: '--set replicaCount=1 --set auth.enabled=false --set service.type=ClusterIP --set service.headless.clusterIP=None --set persistence.enabled=true --set persistence.size=5Gi --set volumePermissions.enabled=true'
+  #     - task: HelmDeploy@1
+  #       displayName: 'Install Zookeeper'
+  #       inputs:
+  #         connectionType: 'Kubernetes Service Connection'
+  #         kubernetesServiceConnection: '${{parameters.Cluster}}'
+  #         command: 'install'
+  #         releaseName: 'nifizkp-zookeeper'
+  #         namespace: '$(Environment)'
+  #         chartType: 'Name'
+  #         chartName: 'bitnami/zookeeper'
+  #         arguments: '--set replicaCount=1 --set auth.enabled=false --set service.type=ClusterIP --set service.headless.clusterIP=None --set persistence.enabled=true --set persistence.size=5Gi --set volumePermissions.enabled=true'
 
 - stage: nificluster
   displayName: Deploying NiFiCluster
