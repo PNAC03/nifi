@@ -45,11 +45,11 @@ spec:
       isNode: true
       nodeSelector:
         node-type: dev
-      externalVolumeConfigs:
-        - name: dataflow-secrets-volume
-          mountPath: "/opt/nifi/secrets/"
-          secret:
-            secretName: "nifi-dataflow-secrets"
+      # externalVolumeConfigs:
+      #   - name: dataflow-secrets-volume
+      #     mountPath: "/opt/nifi/secrets/"
+      #     secret:
+      #       secretName: "nifi-dataflow-secrets"
       resourcesRequirements:
         limits:
           cpu: "2.5"
@@ -131,47 +131,12 @@ spec:
       nodeConfigGroup: default_group
   propagateLabels: false
   readOnlyConfig:
-    additionalNifiEnvs:
-      - name: modenik_tid
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: modenik_tid
-      - name: dixcy_email_id
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: dixcy_email_id
-      - name: enamor_email_id
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: enamor_email_id
-      - name: login_recaptcha_token
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: login_recaptcha_token
-      - name: dixcy_buid
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: dixcy_buid
-      - name: enamor_buid
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: enamor_buid
-      - name: dixcy_password
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: dixcy_password
-      - name: enamor_password
-        valueFrom:
-          secretKeyRef:
-            name: nifi-dataflow-secrets
-            key: enamor_password  
+    # additionalNifiEnvs:
+      # - name: modenik_tid
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: nifi-dataflow-secrets
+      #       key: modenik_tid
     bootstrapProperties:
       # nifiJvmMemory: 2g
       overrideConfigs: |
@@ -184,6 +149,7 @@ spec:
         nifi.nar.library.autoload.directory=../extensions
         nifi.sensitive.props.key=nifikopnifikopnifikop
         nifi.variable.registry.properties=/opt/nifi/nifi-current/conf/variable-registry.properties
+        nifi.web.proxy.context.path=/integration-hub/
       webProxyHosts:
         - ih-nifi-qa.3sc.ai:443
         - in-nifi-qa.3sc.ai

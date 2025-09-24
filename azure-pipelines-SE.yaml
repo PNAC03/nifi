@@ -30,10 +30,10 @@ parameters:
     displayName: Install NiFiKop
     type: boolean
     default: false
-  - name: installZookeeper
-    displayName: Install Zookeeper
-    type: boolean
-    default: false
+  # - name: installZookeeper
+  #   displayName: Install Zookeeper
+  #   type: boolean
+  #   default: false
   - name: createCluster
     displayName: Create NiFiCluster
     type: boolean
@@ -134,7 +134,7 @@ stages:
           namespace: '$(Environment)'
           arguments: '--version 1.14.2 --set image.tag=v1.14.2-release --set resources.requests.memory=256Mi --set resources.requests.cpu=250m --set resources.limits.memory=256Mi --set resources.limits.cpu=250m --set namespaces={$(Environment)}'
 
-- stage: zookeeper 
+# - stage: zookeeper 
   displayName: Deploy Zookeeper
   condition: ${{ eq(parameters.installZookeeper, 'true') }}
   jobs:
@@ -176,15 +176,75 @@ stages:
         deploy:
           steps:
           - checkout: self
+          
+          - checkout: self
+
+          - task: KubernetesManifest@0
+            displayName: Create imagePullSecret
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: createSecret
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+
+          - task: Docker@2
+            displayName: Building Docker Image
+            inputs:
+              containerRegistry: '$(dockerRegistryServiceConnection)'
+              repository: '$(imageRepository)-$(Environment)'
+              command: 'build'
+              Dockerfile: '$(dockerfilePath)'
+              tags: '$(tag)'
+              arguments: '--no-cache'
+
+          - task: Docker@2
+            displayName: Pushing Docker Image To ACR
+            inputs:
+              containerRegistry: '$(dockerRegistryServiceConnection)'
+              repository: '$(imageRepository)-$(Environment)'
+              command: 'push'
+              tags: '$(tag)'
+
+          - script: |
+              echo "Performing image tag substitution in manifest file..."
+              FULL_IMAGE_NAME="$(containerRegistry)/$(imageRepository)-$(Environment):$(tag)"
+              echo "${FULL_IMAGE_NAME}"
+              sed -i "s|buildid|$(Build.BuildId)|g" $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+              echo "Substitution complete."
+              echo "--- Start of Updated Manifest File ---"
+              cat $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+              echo "--- End of Updated Manifest File ---"
+            displayName: 'Update Manifest File'
 
           - task: KubernetesManifest@1
-            displayName: Deploy to Kubernetes
+            displayName: Deploy NiFiCluster to Kubernetes
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: deploy
+              imagePullSecrets: |
+                $(imagePullSecret)
+              manifests: |
+                $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+          
+          - task: KubernetesManifest@1
+            displayName: Deploy ConfigMap to Kubernetes
             inputs:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
               namespace: $(Environment)
               action: deploy
               manifests: |
-                $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+                $(Build.SourcesDirectory)/deployments/config-$(Environment).yaml
+          
+          - task: KubernetesManifest@1 
+            displayName: Deploy NginxProxy to Kubernetes
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: deploy
+              manifests: |
+                $(Build.SourcesDirectory)/deployments/deployment-nginx-$(Environment).yaml
 
 - stage: deletenificluster
   displayName: Delete NiFiCluster

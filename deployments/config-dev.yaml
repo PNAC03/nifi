@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nifi-nginx-conf
+data:
+  default.conf: |
+    server {
+        listen 80;
+
+        server_name dev.3sc.ai;
+
+        location /integration-hub/ {
+            proxy_pass https://nifikop:443/;   # rewrite /nifi/* → /* for NiFi
+            proxy_ssl_server_name on;
+
+            # NiFi proxy headers
+            proxy_set_header X-ProxyScheme https;
+            proxy_set_header X-ProxyHost $host;
+            proxy_set_header X-ProxyPort 443;
+            proxy_set_header X-ProxyContextPath /integration-hub;
+            proxy_set_header X-ProxiedEntitiesChain CN=nginx-proxy;
+
+            # Preserve Host for NiFi validation
+            proxy_set_header Host nifi-internal.3sc.com;
+
+            # Forward client IP
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
