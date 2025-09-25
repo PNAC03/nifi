@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nifikop
+  namespace: dev
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/ssl-passthrough: 'false'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: dev.3sc.ai
+      http:
+        paths:
+          - path: /integration-hub(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nifi-nginx-proxy
+                port:
+                  number: 80
