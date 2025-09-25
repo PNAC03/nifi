@@ -3,7 +3,7 @@ kind: NifiCluster
 metadata:
   name: nifikop  
 spec:
-  clusterImage: apache/nifi:2.4.0
+  clusterImage: scaicinacrall.azurecr.io/ih-nifi-dev:buildid
   nodeUserIdentityTemplate: node-%d-nifikop
   oneNifiNodePerNode: true
   singleUserConfiguration:
@@ -42,7 +42,7 @@ spec:
   nodeConfigGroups:
     default_group:
       fsGroup: 1337
-      isNode: true
+      isNode: true  
       nodeSelector:
         node-type: dev
       # externalVolumeConfigs:
