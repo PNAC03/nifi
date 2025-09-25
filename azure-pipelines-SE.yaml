@@ -278,3 +278,21 @@ stages:
               action: delete
               arguments: -f $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
             continueOnError: true
+
+          - task: KubernetesManifest@1
+            displayName: Delete existing Proxy
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: delete
+              arguments: -f $(Build.SourcesDirectory)/deployments/deployment-nginx-$(Environment).yaml
+            continueOnError: true
+
+          - task: KubernetesManifest@1
+            displayName: Delete existing ConfigMap
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: delete
+              arguments: -f $(Build.SourcesDirectory)/deployments/config-$(Environment).yaml
+            continueOnError: true
