@@ -151,8 +151,8 @@ spec:
         nifi.variable.registry.properties=/opt/nifi/nifi-current/conf/variable-registry.properties
         nifi.web.proxy.context.path=/integration-hub/
       webProxyHosts:
-        - ih-nifi-qa.3sc.ai:443
-        - in-nifi-qa.3sc.ai
+        - nifi-internal.3sc.com:443
+        - nifi-internal.3sc.com
   service:
     headlessEnabled: true
   sidecarConfigs:
