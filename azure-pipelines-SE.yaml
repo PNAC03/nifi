@@ -38,10 +38,6 @@ parameters:
     displayName: Create NiFiCluster
     type: boolean
     default: true
-  - name: deleteCluster
-    displayName: Delete NiFiCluster
-    type: boolean
-    default: false
 
 
 variables:
@@ -147,34 +143,6 @@ stages:
           namespace: '$(Environment)'
           arguments: '--version 1.14.2 --set image.tag=v1.14.2-release --set resources.requests.memory=256Mi --set resources.requests.cpu=250m --set resources.limits.memory=256Mi --set resources.limits.cpu=250m --set namespaces={$(Environment)}'
 
-# - stage: zookeeper 
-  # displayName: Deploy Zookeeper
-  # condition: ${{ eq(parameters.installZookeeper, 'true') }}
-  # jobs:
-  # - job: installZookeeper
-  #   displayName: 'Installing Helm and Zookeeper'
-  #   timeoutInMinutes: 6          
-  #   steps:
-  #     - task: HelmInstaller@1
-  #       inputs:
-  #         helmVersionToInstall: 'latest'
-      
-  #     - script: |
-  #         helm repo add bitnami https://charts.bitnami.com/bitnami 
-  #         helm repo update  
-
-  #     - task: HelmDeploy@1
-  #       displayName: 'Install Zookeeper'
-  #       inputs:
-  #         connectionType: 'Kubernetes Service Connection'
-  #         kubernetesServiceConnection: '${{parameters.Cluster}}'
-  #         command: 'install'
-  #         releaseName: 'nifizkp-zookeeper'
-  #         namespace: '$(Environment)'
-  #         chartType: 'Name'
-  #         chartName: 'bitnami/zookeeper'
-  #         arguments: '--set replicaCount=1 --set auth.enabled=false --set service.type=ClusterIP --set service.headless.clusterIP=None --set persistence.enabled=true --set persistence.size=5Gi --set volumePermissions.enabled=true'
-
 - stage: nificluster
   displayName: Deploying NiFiCluster
   condition: ${{ eq(parameters.createCluster, 'true') }}
@@ -247,52 +215,21 @@ stages:
               action: deploy
               manifests: |
                 $(Build.SourcesDirectory)/deployments/config-$(Environment).yaml
+
+          - task: KubernetesManifest@1 
+            displayName: Delete NginxProxy
+            inputs:
+              action: 'delete'
+              connectionType: 'kubernetesServiceConnection'
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: '$(Environment)'
+              arguments: 'deploy/nifi-nginx-proxy'         
           
           - task: KubernetesManifest@1 
-            displayName: Deploy NginxProxy to Kubernetes
+            displayName: Reinitialize NginxProxy to Kubernetes
             inputs:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
               namespace: $(Environment)
               action: deploy
               manifests: |
                 $(Build.SourcesDirectory)/deployments/deployment-nginx-$(Environment).yaml
-
-- stage: deletenificluster
-  displayName: Delete NiFiCluster
-  condition: ${{ eq(parameters.deleteCluster, 'true') }}
-  jobs:
-  - deployment:
-    displayName: Deleting NiFiCluster 
-    environment: $(Environment)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - checkout: self
-
-          - task: KubernetesManifest@1
-            displayName: Delete existing NiFiCluster
-            inputs:
-              kubernetesServiceConnection: '${{parameters.Cluster}}'
-              namespace: $(Environment)
-              action: delete
-              arguments: -f $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
-            continueOnError: true
-
-          - task: KubernetesManifest@1
-            displayName: Delete existing Proxy
-            inputs:
-              kubernetesServiceConnection: '${{parameters.Cluster}}'
-              namespace: $(Environment)
-              action: delete
-              arguments: -f $(Build.SourcesDirectory)/deployments/deployment-nginx-$(Environment).yaml
-            continueOnError: true
-
-          - task: KubernetesManifest@1
-            displayName: Delete existing ConfigMap
-            inputs:
-              kubernetesServiceConnection: '${{parameters.Cluster}}'
-              namespace: $(Environment)
-              action: delete
-              arguments: -f $(Build.SourcesDirectory)/deployments/config-$(Environment).yaml
-            continueOnError: true
