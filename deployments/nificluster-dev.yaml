@@ -131,12 +131,9 @@ spec:
       nodeConfigGroup: default_group
   propagateLabels: false
   readOnlyConfig:
-    # additionalNifiEnvs:
-      # - name: modenik_tid
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: nifi-dataflow-secrets
-      #       key: modenik_tid
+    additionalNifiEnvs:
+      - name: INITIAL_ADMIN_IDENTITY
+        value: nifi3scdev
     bootstrapProperties:
       # nifiJvmMemory: 2g
       overrideConfigs: |
