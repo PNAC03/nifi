@@ -128,6 +128,7 @@ spec:
       labels:
         nifi_cr: nifikop
         nifi_node_group: default_group
+        nifi_restart: test1
       nodeConfigGroup: default_group
   propagateLabels: false
   readOnlyConfig:
