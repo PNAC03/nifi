@@ -211,10 +211,10 @@ stages:
               echo "Performing image tag substitution in manifest file..."
               FULL_IMAGE_NAME="$(containerRegistry)/$(imageRepository)-$(Environment):$(tag)"
               echo "${FULL_IMAGE_NAME}"
-              sed -i "s|buildid|$(Build.BuildId)|g" $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+              sed -i "s|buildid|$(Build.BuildId)|g" $(Build.SourcesDirectory)/deployments/nificluster-ldap-$(Environment).yaml
               echo "Substitution complete."
               echo "--- Start of Updated Manifest File ---"
-              cat $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+              cat $(Build.SourcesDirectory)/deployments/nificluster-ldap-$(Environment).yaml
               echo "--- End of Updated Manifest File ---"
             displayName: 'Update Manifest File'
 
@@ -227,7 +227,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               manifests: |
-                $(Build.SourcesDirectory)/deployments/nificluster-$(Environment).yaml
+                $(Build.SourcesDirectory)/deployments/nificluster-ldap-$(Environment).yaml
           
           - task: KubernetesManifest@1
             displayName: Deploy ConfigMap to Kubernetes
