@@ -181,6 +181,17 @@ stages:
           - checkout: self
 
           - task: KubernetesManifest@1
+            displayName: Deploy supporting Resource(s) to Kubernetes
+            inputs:
+              kubernetesServiceConnection: '${{parameters.Cluster}}'
+              namespace: $(Environment)
+              action: deploy
+              manifests: |
+                $(Build.SourcesDirectory)/deployments/nifi-user-$(Environment).yaml
+                $(Build.SourcesDirectory)/deployments/registry-client.yaml
+          
+
+          - task: KubernetesManifest@1
             displayName: Create imagePullSecret
             inputs:
               kubernetesServiceConnection: '${{parameters.Cluster}}'
