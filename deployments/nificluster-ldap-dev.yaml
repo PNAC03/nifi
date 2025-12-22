@@ -9,8 +9,8 @@ spec:
   managedAdminUsers:
     - identity: nifi3scdev
       name: nifi3scdev
-    - identity: trying
-      name: trying
+    - identity: testuser
+      name: testuser
   ldapConfiguration:
     enabled: true
     url: ldap://nifi-ldap-auth-svc.dev.svc.cluster.local:389

@@ -187,7 +187,6 @@ stages:
               namespace: $(Environment)
               action: deploy
               manifests: |
-                $(Build.SourcesDirectory)/deployments/nifi-user-$(Environment).yaml
                 $(Build.SourcesDirectory)/deployments/registry-client.yaml
           
 
