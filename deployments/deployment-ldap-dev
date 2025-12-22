@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nifi-ldap-auth-server
+  namespace: dev
+  labels:
+    app: nifi-ldap-auth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nifi-ldap-auth-server
+  template:
+    metadata:
+      labels:
+        app: nifi-ldap-auth-server
+    spec:
+      volumes:
+      - name: nifi-registry-ldap-config
+        secret:
+          secretName: 50-entries.ldif
+          defaultMode: 420
+      containers:
+      - name: ldap-auth-server
+        image: osixia/openldap:1.5.0
+        command:
+          - /bin/sh
+        args:
+          - '-c'
+          - >
+            /container/tool/run &
+
+            PID=$!
+
+            sleep 50
+
+            ldapadd -x -H ldap://localhost -D "cn=admin,dc=example,dc=in" -w
+            "password" -f /var/tmp/50-entries.ldif
+
+            wait $PID
+        ports:
+          - name: ldap-http
+            containerPort: 389
+            protocol: TCP
+        env:
+          - name: LDAP_ORGANISATION
+            value: exampleorg
+          - name: LDAP_DOMAIN
+            value: example.in
+          - name: LDAP_BASE
+            value: dc=example,dc=in
+          - name: LDAP_ADMIN_PASSWORD
+            value: password
+        resources: {}
+        volumeMounts:
+          - name: nifi-registry-ldap-config
+            mountPath: /var/tmp
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nifi-ldap-auth-svc
+  namespace: dev
+spec:
+  type: ClusterIP
+  ports:
+    - port: 389
+      targetPort: 389
+      name: nifi-ldap
+  selector:
+    app: nifi-ldap-auth-server

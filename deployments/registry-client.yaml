@@ -7,4 +7,4 @@ spec:
     name: nifikop
     namespace: qa
   description: "Squidflow demo"
-  uri: "https://nifi-registry.dev.svc.cluster.local:18443"
+  uri: "https://nifi-registry.dev.svc.cluster.local:18443/"

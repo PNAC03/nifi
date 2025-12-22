@@ -26,6 +26,10 @@ parameters:
     displayName: Install CertManager
     type: boolean
     default: false
+  - name: installNiFiLDAP
+    displayName: Install LDAP Auth Server
+    type: boolean
+    default: false
   - name: installNiFiKop
     displayName: Install NiFiKop
     type: boolean
@@ -111,6 +115,24 @@ stages:
           chartName: 'jetstack/cert-manager'
           releaseName: 'cert-manager'
           arguments: '--version v1.17.2'
+
+- stage: nifiLDAP
+  displayName: Deploy LDAP for NiFi and NiFi Registry
+  condition: ${{ eq(parameters.installCertManager, 'true') }}
+  jobs:
+  - job: installingNiFiLDAP
+    displayName: 'Deploying NiFiLDAP'
+    timeoutInMinutes: 2
+    condition: ${{ eq(parameters.freshInstallation, 'true') }} #eq(parameters.Cluster, true)
+    steps:
+    - task: KubernetesManifest@1
+      displayName: Deploy NiFiLDAP auth server to Kubernetes
+      inputs:
+        kubernetesServiceConnection: '${{parameters.Cluster}}'
+        namespace: $(Environment)
+        action: deploy
+        manifests: |
+          $(Build.SourcesDirectory)/deployments/deployment-ldap-$(Environment).yaml
 
 - stage: nifikop
   displayName: Deploy NiFiKop
