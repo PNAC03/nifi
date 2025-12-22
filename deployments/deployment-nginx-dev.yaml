@@ -17,6 +17,8 @@ spec:
       labels:
         app: nifi-nginx-proxy
     spec:
+      nodeSelector:
+        node-type: dev
       containers:
         - name: nginx
           image: nginx:1.25-alpine

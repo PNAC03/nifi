@@ -20,6 +20,8 @@ spec:
         secret:
           secretName: 50-entries.ldif
           defaultMode: 420
+      nodeSelector:
+        node-type: dev
       containers:
       - name: ldap-auth-server
         image: osixia/openldap:1.5.0
