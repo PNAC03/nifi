@@ -7,10 +7,13 @@ spec:
   nodeUserIdentityTemplate: node-%d-nifikop
   oneNifiNodePerNode: true
   managedAdminUsers:
-    - identity: nifi3scdev
-      name: nifi3scdev
-    - identity: testuser
-      name: testuser
+  - identity: nifi3scdev
+    name: nifi3scdev
+  - identity: testuser
+    name: testuser
+  managedReaderUsers:
+  - identity: viewuser
+    name: viewuser
   ldapConfiguration:
     enabled: true
     url: ldap://nifi-ldap-auth-svc.dev.svc.cluster.local:389
