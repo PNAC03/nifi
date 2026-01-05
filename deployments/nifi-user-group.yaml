@@ -12,24 +12,3 @@ spec:
     - name: ihproduct
       namespace: dev
   # defines the list of access policies that will be granted to the group.
-  accessPolicies:
-    # defines the kind of access policy, could be "global" or "component".
-    - type: global
-      # defines the kind of action that will be granted, could be "read" or "write"
-      action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-      resource: /counters
-    - type: global
-      # defines the kind of action that will be granted, could be "read" or "write"
-      action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-      resource: /parameter-contexts
-    - type: global
-      # defines the kind of action that will be granted, could be "read" or "write"
-      action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-      resource: /flow
-    
