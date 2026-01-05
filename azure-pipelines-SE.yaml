@@ -188,6 +188,8 @@ stages:
               action: deploy
               manifests: |
                 $(Build.SourcesDirectory)/deployments/registry-client.yaml
+                $(Build.SourcesDirectory)/deployments/nifi-user-3-dev.yaml
+                $(Build.SourcesDirectory)/deployments/nifi-user-group.yaml
           
 
           - task: KubernetesManifest@1
