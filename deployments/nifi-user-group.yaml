@@ -12,3 +12,58 @@ spec:
     - name: ihproduct
       namespace: dev
   # defines the list of access policies that will be granted to the group.
+  accessPolicies:
+    # defines the kind of access policy, could be "global" or "component".
+    - type: global
+      action: read
+      resource: /flow
+    - type: component
+      action: read
+      resource: /data
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /flow
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /parameter-contexts
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /counters
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /provenance
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /restricted-components
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /policies
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /proxy
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /site-to-site
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
