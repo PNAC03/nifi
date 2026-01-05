@@ -11,6 +11,10 @@ spec:
   usersRef:
     - name: ihproduct
       namespace: dev
+    - name: nifi3scdev
+      namespace: dev
+    - name: nifikop-controller
+      namespace: dev
   # defines the list of access policies that will be granted to the group.
   accessPolicies:
     # defines the kind of access policy, could be "global" or "component".
