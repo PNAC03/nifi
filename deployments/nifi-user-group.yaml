@@ -2,6 +2,7 @@ apiVersion: nifi.konpyutaika.com/v1
 kind: NifiUserGroup
 metadata:
   name: group-test
+  namespace: dev
 spec:
   # Contains the reference to the NifiCluster with the one the registry client is linked.
   clusterRef:
@@ -11,9 +12,7 @@ spec:
   usersRef:
     - name: ihproduct
       namespace: dev
-    - name: nifi3scdev
-      namespace: dev
-    - name: nifikop-controller
+    - name: nifikop.nifi3scdev
       namespace: dev
   # defines the list of access policies that will be granted to the group.
   accessPolicies:
