@@ -17,179 +17,56 @@ spec:
   createCert: false 
   accessPolicies:
     # defines the kind of access policy, could be "global" or "component".
-    - type: component
-      # defines the kind of action that will be granted, could be "read" or "write"
-      action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-      resource: /data
-      # componentType is used if the type is "component", it's allow to define the kind of component on which is the
-      # access policy
-      componentType: "process-groups"
-      # componentId is used if the type is "component", it's allow to define the id of the component on which is the
-      # access policy
-      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: global
-      # defines the kind of action that will be granted, could be "read" or "write"
       action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
       resource: /flow
     - type: component
-      # defines the kind of action that will be granted, could be "read" or "write"
       action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-      resource: /flow
-      # componentType is used if the type is "component", it's allow to define the kind of component on which is the
-      # access policy
+      resource: /data
       componentType: "process-groups"
-      # componentId is used if the type is "component", it's allow to define the id of the component on which is the
-      # access policy
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
-      # defines the kind of action that will be granted, could be "read" or "write"
       action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
+      resource: /flow
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
       resource: /parameter-contexts
-      # componentType is used if the type is "component", it's allow to define the kind of component on which is the
-      # access policy
       componentType: "process-groups"
-      # componentId is used if the type is "component", it's allow to define the id of the component on which is the
-      # access policy
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
-      # defines the kind of action that will be granted, could be "read" or "write"
       action: read
-      # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-      #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
       resource: /counters
-      # componentType is used if the type is "component", it's allow to define the kind of component on which is the
-      # access policy
       componentType: "process-groups"
-      # componentId is used if the type is "component", it's allow to define the id of the component on which is the
-      # access policy
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
-  # accessPolicies:
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /flow
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /flow
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /controller
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /controller
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /parameter-contexts
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /parameter-contexts
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /restricted-components
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /restricted-components
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /policies
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /policies
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /tenants
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /tenants
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /site-to-site
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /site-to-site
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /proxy
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /proxy
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /system
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /system
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: read
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /counters
-  # - type: global
-  #   # defines the kind of action that will be granted, could be "read" or "write"
-  #   action: write
-  #   # resource defines the kind of resource targeted by this access policies, please refer to the following page:
-  #   #	https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#access-policies
-  #   resource: /counters
-    
+    - type: component
+      action: read
+      resource: /provenance
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /restricted-components
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /policies
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /proxy
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /site-to-site
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: component
+      action: read
+      resource: /
+      componentType: "process-groups"
+      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
