@@ -24,27 +24,12 @@ spec:
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
       action: read
-      resource: /flow
-      componentType: "process-groups"
-      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
-    - type: component
-      action: read
-      resource: /parameter-contexts
-      componentType: "process-groups"
-      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
-    - type: component
-      action: read
       resource: /counters
       componentType: "process-groups"
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
       action: read
-      resource: /provenance
-      componentType: "process-groups"
-      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
-    - type: component
-      action: read
-      resource: /restricted-components
+      resource: /provenance-data
       componentType: "process-groups"
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
@@ -54,12 +39,7 @@ spec:
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
       action: read
-      resource: /proxy
-      componentType: "process-groups"
-      componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
-    - type: component
-      action: read
-      resource: /site-to-site
+      resource: /data-transfer
       componentType: "process-groups"
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
     - type: component
