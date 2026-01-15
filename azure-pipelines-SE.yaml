@@ -140,7 +140,7 @@ stages:
   jobs:
   - job: installingNiFiKop
     displayName: 'Intalling NiFiKop'
-    timeoutInMinutes: 2          # cancel pipeline in case of any misconfig 
+    timeoutInMinutes: 2          # cancel pipeline incase of any misconfig 
     steps:
       # - task: HelmInstaller@1
       #   inputs:
