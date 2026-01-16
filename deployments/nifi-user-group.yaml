@@ -14,6 +14,10 @@ spec:
       namespace: dev
     - name: nifikop.nifi3scdev
       namespace: dev
+    - name: nifikop.nifikop-controller
+      namespace: dev
+    - name: nifikop.node-0-nifikop
+      namespace: dev
   # defines the list of access policies that will be granted to the group.
   accessPolicies:
     # defines the kind of access policy, could be "global" or "component".
