@@ -189,6 +189,7 @@ stages:
               manifests: |
                 $(Build.SourcesDirectory)/deployments/registry-client.yaml
                 $(Build.SourcesDirectory)/deployments/nifi-user-3-dev.yaml
+                $(Build.SourcesDirectory)/deployments/nifi-user-4-dev.yaml
                 $(Build.SourcesDirectory)/deployments/nifi-user-group.yaml
           
 
