@@ -6,4 +6,4 @@ spec:
   clusterRef:
     name: nifikop
   description: "SCAI DQU NiFi Registry"
-  uri: "https://nifi-registry.dev.svc.cluster.local:18443/ih-registry/"
+  uri: "https://nifi-registry.uat.svc.cluster.local:18443/ih-registry/"
