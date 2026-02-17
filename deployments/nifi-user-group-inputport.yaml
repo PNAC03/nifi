@@ -1,0 +1,27 @@
+apiVersion: nifi.konpyutaika.com/v1
+kind: NifiUserGroup
+metadata:
+  name: group-inputport-access
+  namespace: dev
+spec:
+  clusterRef:
+    name: nifikop
+    namespace: dev
+  usersRef:
+    - name: nifikop-controller
+      namespace: dev
+    - name: node-0-nifikop
+      namespace: dev
+    - name: nifikop.nifi3scdev
+      namespace: dev
+  accessPolicies:
+    - type: component
+      action: read
+      resource: /data-transfer
+      componentType: "input-ports"
+      componentId: "00907ef4-019c-1000-ffff-ffff81174c61"
+    - type: component
+      action: write
+      resource: /data-transfer
+      componentType: "input-ports"
+      componentId: "00907ef4-019c-1000-ffff-ffff81174c61"

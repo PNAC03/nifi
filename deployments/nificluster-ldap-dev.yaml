@@ -55,11 +55,15 @@ spec:
       isNode: true  
       nodeSelector:
         node-type: dev
-      # externalVolumeConfigs:
-      #   - name: dataflow-secrets-volume
-      #     mountPath: "/opt/nifi/secrets/"
-      #     secret:
-      #       secretName: "nifi-dataflow-secrets"
+      externalVolumeConfigs:
+        - name: registry-client-creds
+          mountPath: "/opt/nifi/nifi-current/registry-client-creds/"
+          secret:
+            secretName: "nifi-registry-tls-with-eku-secret"
+        # - name: configmaps
+        #   mountPath: "/your/mount/path"
+        #   configMap:
+        #     name: "yourConfigMapName"
       resourcesRequirements:
         limits:
           cpu: "2.5"
