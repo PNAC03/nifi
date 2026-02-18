@@ -1,10 +1,9 @@
 apiVersion: nifi.konpyutaika.com/v1alpha1
 kind: NifiRegistryClient
 metadata:
-  name: squidflow
+  name: scai-dqu-registry
 spec:
   clusterRef:
     name: nifikop
-    namespace: dev
-  description: "Squidflow demo"
-  uri: "https://nifi-registry.dev.svc.cluster.local:18443/"
+  description: "SCAI DQU NiFi Registry"
+  uri: "https://nifi-registry.uat.svc.cluster.local:18443/ih-registry/"
