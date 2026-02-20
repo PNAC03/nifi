@@ -16,7 +16,7 @@ spec:
     name: viewuser
   ldapConfiguration:
     enabled: true
-    url: ldap://nifi-ldap-auth-svc.dev.svc.cluster.local:389
+    url: ldap://nifi-ldap-auth-svc.uat.svc.cluster.local:389
     searchBase: dc=example,dc=in
     searchFilter: (cn={0})
     authenticationStrategy: SIMPLE
