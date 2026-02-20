@@ -118,7 +118,7 @@ stages:
 
 - stage: nifiLDAP
   displayName: Deploy LDAP for NiFi and NiFi Registry
-  condition: ${{ eq(parameters.installCertManager, 'true') }}
+  condition: ${{ eq(parameters.installNiFiLDAP, 'true') }}
   jobs:
   - job: installingNiFiLDAP
     displayName: 'Deploying NiFiLDAP'
