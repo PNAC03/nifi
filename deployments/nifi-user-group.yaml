@@ -49,3 +49,9 @@ spec:
       resource: /
       componentType: "process-groups"
       componentId: "8d8a51e0-019b-1000-ffff-ffffe807ac01"
+    - type: global
+      action: write
+      resource: /site-to-site
+    - type: global
+      action: read
+      resource: /site-to-site
