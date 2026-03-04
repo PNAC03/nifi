@@ -170,6 +170,7 @@ spec:
         nifi.repository.encryption.key.provider=KEYSTORE
         nifi.repository.encryption.key.provider.keystore.location=/opt/nifi/nifi-current/conf/repository.p12
         nifi.repository.encryption.key.provider.keystore.password=itsdone
+        nifi.content.repository.archive.enabled=false
       webProxyHosts:
         - nifi-internal.3sc.com:443
         - nifi-internal.3sc.com
