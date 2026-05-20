@@ -55,6 +55,10 @@ spec:
       isNode: true  
       nodeSelector:
         node-type: dev
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
       externalVolumeConfigs:
         - name: registry-client-creds
           mountPath: "/opt/nifi/nifi-current/registry-client-creds/"
