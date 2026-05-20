@@ -110,11 +110,12 @@ stages:
           connectionType: 'Kubernetes Service Connection'
           kubernetesServiceConnection: '${{parameters.Cluster}}'
           namespace: '$(Environment)'
-          command: 'install'
+          command: 'upgrade'
           chartType: 'Name'
           chartName: 'jetstack/cert-manager'
           releaseName: 'cert-manager'
           arguments: >
+           --install
            --version v1.17.2
            --set tolerations[0].key="kubernetes.azure.com/scalesetpriority"
            --set tolerations[0].operator="Equal"
@@ -163,12 +164,13 @@ stages:
         inputs:
           connectionType: 'Kubernetes Service Connection'
           kubernetesServiceConnection: '${{parameters.Cluster}}'
-          command: 'install'
+          command: 'upgrade'
           chartType: 'Name'
           chartName: 'oci://ghcr.io/konpyutaika/helm-charts/nifikop'
           releaseName: 'nifikop'
           namespace: '$(Environment)'
           arguments: >
+            --install
             --version 1.14.2 
             --set image.tag=v1.14.2-release 
             --set resources.requests.memory=256Mi 
