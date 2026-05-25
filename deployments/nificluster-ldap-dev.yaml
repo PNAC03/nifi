@@ -70,7 +70,7 @@ spec:
         #     name: "yourConfigMapName"
       resourcesRequirements:
         limits:
-          cpu: "2.5"
+          cpu: "3"
           memory: 3Gi
         requests:
           cpu: "1"
@@ -154,7 +154,7 @@ spec:
       - name: INITIAL_ADMIN_IDENTITY
         value: nifi3scdev
     bootstrapProperties:
-      # nifiJvmMemory: 2g
+      nifiJvmMemory: 1g
       overrideConfigs: |
         # Java 8 Tuning see https://community.hortonworks.com/articles/7882/hdfnifi-best-practices-for-setting-up-a-high-perfo.html for references
         java.arg.7=-XX:ReservedCodeCacheSize=256m
